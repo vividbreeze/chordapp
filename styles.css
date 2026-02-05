@@ -1,0 +1,293 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #e0e0e0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* Status Section */
+.status-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.status-indicator.disconnected {
+    background-color: #e74c3c;
+    box-shadow: 0 0 10px #e74c3c;
+}
+
+.status-indicator.connected {
+    background-color: #2ecc71;
+    box-shadow: 0 0 10px #2ecc71;
+}
+
+#connect-btn {
+    padding: 0.5rem 1.5rem;
+    background: #3498db;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+#connect-btn:hover {
+    background: #2980b9;
+}
+
+#connect-btn:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
+/* Device Section */
+.device-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.device-section.hidden {
+    display: none;
+}
+
+.device-section h2 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #888;
+}
+
+#device-list {
+    list-style: none;
+}
+
+#device-list li {
+    padding: 0.5rem;
+    background: rgba(46, 204, 113, 0.1);
+    border-radius: 6px;
+    margin-bottom: 0.25rem;
+    border-left: 3px solid #2ecc71;
+}
+
+/* Display Section */
+.display-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .display-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chord-display, .notes-display {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.chord-display h2, .notes-display h2 {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 1rem;
+}
+
+.chord-name {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #3498db;
+    min-height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chord-notes {
+    color: #888;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+.active-notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    min-height: 3rem;
+    align-items: center;
+}
+
+.note-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    animation: noteIn 0.2s ease-out;
+}
+
+@keyframes noteIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Keyboard Section */
+.keyboard-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.keyboard-section h2 {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.keyboard {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    height: 150px;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.white-key {
+    width: 40px;
+    height: 140px;
+    background: linear-gradient(180deg, #fff 0%, #e8e8e8 100%);
+    border: 1px solid #ccc;
+    border-radius: 0 0 6px 6px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: background 0.1s;
+}
+
+.white-key:hover {
+    background: linear-gradient(180deg, #f0f0f0 0%, #ddd 100%);
+}
+
+.white-key.active {
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+}
+
+.black-key {
+    width: 24px;
+    height: 90px;
+    background: linear-gradient(180deg, #333 0%, #111 100%);
+    border-radius: 0 0 4px 4px;
+    position: absolute;
+    z-index: 2;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.black-key:hover {
+    background: linear-gradient(180deg, #444 0%, #222 100%);
+}
+
+.black-key.active {
+    background: linear-gradient(180deg, #9b59b6 0%, #8e44ad 100%);
+}
+
+/* History Section */
+.history-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.history-section h2 {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 1rem;
+}
+
+.history {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: 2rem;
+    margin-bottom: 1rem;
+}
+
+.history-item {
+    background: rgba(52, 152, 219, 0.2);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+#clear-history {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid #555;
+    border-radius: 6px;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+#clear-history:hover {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}

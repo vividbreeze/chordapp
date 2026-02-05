@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI Akkord-Erkennung</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MIDI Akkord-Erkennung</h1>
+            <p class="subtitle">Verbinde dein MIDI-Keyboard und spiele Noten oder Akkorde</p>
+        </header>
+
+        <section id="midi-status" class="status-section">
+            <div class="status-indicator disconnected" id="status-indicator"></div>
+            <span id="status-text">MIDI nicht verbunden</span>
+            <button id="connect-btn">MIDI verbinden</button>
+        </section>
+
+        <section id="device-section" class="device-section hidden">
+            <h2>Verbundene Geräte</h2>
+            <ul id="device-list"></ul>
+        </section>
+
+        <section class="display-section">
+            <div class="chord-display">
+                <h2>Erkannter Akkord</h2>
+                <div id="chord-name" class="chord-name">-</div>
+                <div id="chord-notes" class="chord-notes"></div>
+            </div>
+
+            <div class="notes-display">
+                <h2>Gespielte Noten</h2>
+                <div id="active-notes" class="active-notes"></div>
+            </div>
+        </section>
+
+        <section class="keyboard-section">
+            <h2>Virtuelle Tastatur</h2>
+            <div id="keyboard" class="keyboard"></div>
+        </section>
+
+        <section class="history-section">
+            <h2>Verlauf</h2>
+            <div id="history" class="history"></div>
+            <button id="clear-history">Verlauf löschen</button>
+        </section>
+    </div>
+
+    <script type="module" src="dist/main.js"></script>
+</body>
+</html>
