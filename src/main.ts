@@ -128,8 +128,8 @@ class ChordApp {
         const startNote = 36; // C2
         const endNote = 96; // C7
 
-        const whiteKeyWidth = 40;
-        const blackKeyWidth = 24;
+        const whiteKeyWidth = 22;
+        const blackKeyWidth = 14;
 
         // Zähle zuerst die weißen Tasten für die Gesamtbreite
         let whiteKeyCount = 0;
@@ -141,7 +141,7 @@ class ChordApp {
         const keyboardInner = document.createElement('div');
         keyboardInner.style.position = 'relative';
         keyboardInner.style.width = `${whiteKeyCount * whiteKeyWidth}px`;
-        keyboardInner.style.height = '140px';
+        keyboardInner.style.height = '75px';
 
         let whiteKeyIndex = 0;
 

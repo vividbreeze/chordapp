@@ -143,7 +143,7 @@ header h1 {
     font-size: 4rem;
     font-weight: bold;
     color: #3498db;
-    min-height: 5rem;
+    height: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -152,7 +152,7 @@ header h1 {
 .chord-notes {
     color: #888;
     font-size: 1.2rem;
-    margin-top: 0.5rem;
+    height: 1.8rem;
 }
 
 .active-notes {
@@ -160,7 +160,7 @@ header h1 {
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: center;
-    min-height: 3rem;
+    height: 3rem;
     align-items: center;
 }
 
@@ -203,17 +203,16 @@ header h1 {
     display: flex;
     justify-content: center;
     position: relative;
-    height: 150px;
+    height: 80px;
     max-width: 100%;
-    overflow-x: auto;
 }
 
 .white-key {
-    width: 40px;
-    height: 140px;
+    width: 22px;
+    height: 75px;
     background: linear-gradient(180deg, #fff 0%, #e8e8e8 100%);
     border: 1px solid #ccc;
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 4px 4px;
     cursor: pointer;
     position: relative;
     z-index: 1;
@@ -229,10 +228,10 @@ header h1 {
 }
 
 .black-key {
-    width: 24px;
-    height: 90px;
+    width: 14px;
+    height: 48px;
     background: linear-gradient(180deg, #333 0%, #111 100%);
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 3px 3px;
     position: absolute;
     z-index: 2;
     cursor: pointer;
@@ -247,47 +246,3 @@ header h1 {
     background: linear-gradient(180deg, #9b59b6 0%, #8e44ad 100%);
 }
 
-/* History Section */
-.history-section {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 1.5rem;
-}
-
-.history-section h2 {
-    font-size: 1rem;
-    color: #888;
-    margin-bottom: 1rem;
-}
-
-.history {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    min-height: 2rem;
-    margin-bottom: 1rem;
-}
-
-.history-item {
-    background: rgba(52, 152, 219, 0.2);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    border: 1px solid rgba(52, 152, 219, 0.3);
-}
-
-#clear-history {
-    padding: 0.5rem 1rem;
-    background: transparent;
-    border: 1px solid #555;
-    border-radius: 6px;
-    color: #888;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s;
-}
-
-#clear-history:hover {
-    border-color: #e74c3c;
-    color: #e74c3c;
-}
