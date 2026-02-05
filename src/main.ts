@@ -159,8 +159,22 @@ class ChordApp {
         const startNote = 48; // C3
         const endNote = 72; // C5
 
-        let whiteKeyPosition = 0;
         const whiteKeyWidth = 40;
+        const blackKeyWidth = 24;
+
+        // Zähle zuerst die weißen Tasten für die Gesamtbreite
+        let whiteKeyCount = 0;
+        for (let note = startNote; note <= endNote; note++) {
+            if (!this.isBlackKey(note)) whiteKeyCount++;
+        }
+
+        // Container für relative Positionierung
+        const keyboardInner = document.createElement('div');
+        keyboardInner.style.position = 'relative';
+        keyboardInner.style.width = `${whiteKeyCount * whiteKeyWidth}px`;
+        keyboardInner.style.height = '140px';
+
+        let whiteKeyIndex = 0;
 
         for (let note = startNote; note <= endNote; note++) {
             const isBlack = this.isBlackKey(note);
@@ -170,20 +184,24 @@ class ChordApp {
                 blackKey.className = 'black-key';
                 blackKey.dataset.note = note.toString();
 
-                // Position der schwarzen Taste
-                const blackKeyOffset = whiteKeyPosition * whiteKeyWidth - 12;
+                // Schwarze Taste liegt zwischen der vorherigen und nächsten weißen Taste
+                const blackKeyOffset = whiteKeyIndex * whiteKeyWidth - (blackKeyWidth / 2);
                 blackKey.style.left = `${blackKeyOffset}px`;
 
-                this.keyboard.appendChild(blackKey);
+                keyboardInner.appendChild(blackKey);
             } else {
                 const whiteKey = document.createElement('div');
                 whiteKey.className = 'white-key';
                 whiteKey.dataset.note = note.toString();
+                whiteKey.style.position = 'absolute';
+                whiteKey.style.left = `${whiteKeyIndex * whiteKeyWidth}px`;
 
-                this.keyboard.appendChild(whiteKey);
-                whiteKeyPosition++;
+                keyboardInner.appendChild(whiteKey);
+                whiteKeyIndex++;
             }
         }
+
+        this.keyboard.appendChild(keyboardInner);
 
         // Klick-Events für virtuelle Tastatur
         this.keyboard.addEventListener('mousedown', (e) => {
