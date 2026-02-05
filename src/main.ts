@@ -1,13 +1,11 @@
 // Hauptmodul - Verbindet MIDI, Akkorderkennung und UI
 
-import { MidiHandler, midiNoteToName, midiNoteToBaseName } from './midi.js';
+import { MidiHandler, midiNoteToName } from './midi.js';
 import { chordRecognizer, ChordResult } from './chords.js';
 
 class ChordApp {
     private midiHandler: MidiHandler;
     private activeNotes: Set<number> = new Set();
-    private history: string[] = [];
-    private lastChord: string = '';
 
     // UI-Elemente
     private statusIndicator!: HTMLElement;
@@ -19,8 +17,6 @@ class ChordApp {
     private chordNotes!: HTMLElement;
     private activeNotesDisplay!: HTMLElement;
     private keyboard!: HTMLElement;
-    private historyDisplay!: HTMLElement;
-    private clearHistoryBtn!: HTMLButtonElement;
 
     constructor() {
         this.midiHandler = new MidiHandler();
@@ -39,19 +35,11 @@ class ChordApp {
         this.chordNotes = document.getElementById('chord-notes')!;
         this.activeNotesDisplay = document.getElementById('active-notes')!;
         this.keyboard = document.getElementById('keyboard')!;
-        this.historyDisplay = document.getElementById('history')!;
-        this.clearHistoryBtn = document.getElementById('clear-history') as HTMLButtonElement;
     }
 
     private setupEventListeners(): void {
         // Verbinden-Button
         this.connectBtn.addEventListener('click', () => this.connectMidi());
-
-        // Verlauf löschen
-        this.clearHistoryBtn.addEventListener('click', () => {
-            this.history = [];
-            this.updateHistoryDisplay();
-        });
 
         // MIDI-Callbacks
         this.midiHandler.onNote((note, velocity, isNoteOn) => {
@@ -133,31 +121,12 @@ class ChordApp {
     private displayChord(chord: ChordResult): void {
         this.chordName.textContent = chord.name;
         this.chordNotes.textContent = chord.notes.join(' - ');
-
-        // Zum Verlauf hinzufügen (nur wenn sich der Akkord geändert hat)
-        if (chord.name !== this.lastChord && chord.type !== 'cluster') {
-            this.lastChord = chord.name;
-            this.history.unshift(chord.name);
-
-            // Verlauf auf 20 Einträge begrenzen
-            if (this.history.length > 20) {
-                this.history.pop();
-            }
-
-            this.updateHistoryDisplay();
-        }
-    }
-
-    private updateHistoryDisplay(): void {
-        this.historyDisplay.innerHTML = this.history
-            .map(h => `<span class="history-item">${h}</span>`)
-            .join('');
     }
 
     private createKeyboard(): void {
-        // Erstelle 2 Oktaven (C3 bis B4)
-        const startNote = 48; // C3
-        const endNote = 72; // C5
+        // Erstelle 5 Oktaven (C2 bis C7)
+        const startNote = 36; // C2
+        const endNote = 96; // C7
 
         const whiteKeyWidth = 40;
         const blackKeyWidth = 24;
