@@ -320,12 +320,12 @@ class ChordApp {
     }
 
     private createHintKeyboard(): void {
-        // Create a 2-octave hint keyboard (C4 to B5) centered around middle C
+        // Create a 2-octave hint keyboard centered around middle C
         const startNote = 48; // C3
         const endNote = 77; // F5
 
-        const whiteKeyWidth = 28;
-        const blackKeyWidth = 18;
+        const whiteKeyWidth = 20;
+        const blackKeyWidth = 14;
 
         let whiteKeyCount = 0;
         for (let note = startNote; note <= endNote; note++) {
