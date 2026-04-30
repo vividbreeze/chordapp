@@ -366,12 +366,12 @@ class ChordApp {
         const allKeys = this.hintKeyboard.querySelectorAll('[data-hint-note]');
         allKeys.forEach(key => key.classList.remove('highlight'));
 
-        // Highlight the required notes (match by pitch class, any octave in range)
-        const pitchClasses = new Set(midiNotes.map(n => n % 12));
+        // Highlight only the exact MIDI notes (show chord once, not in all octaves)
+        const noteSet = new Set(midiNotes);
 
         allKeys.forEach(key => {
             const keyNote = parseInt((key as HTMLElement).dataset.hintNote || '0');
-            if (pitchClasses.has(keyNote % 12)) {
+            if (noteSet.has(keyNote)) {
                 key.classList.add('highlight');
             }
         });
