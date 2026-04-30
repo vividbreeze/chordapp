@@ -6,6 +6,7 @@ import { chordRecognizer, ChordResult } from './chords.js';
 class ChordApp {
     private midiHandler: MidiHandler;
     private activeNotes: Set<number> = new Set();
+    private virtualPressedNotes: Set<number> = new Set();
 
     // UI-Elemente
     private statusIndicator!: HTMLElement;
@@ -177,25 +178,27 @@ class ChordApp {
             const target = e.target as HTMLElement;
             if (target.dataset.note) {
                 const note = parseInt(target.dataset.note);
+                this.virtualPressedNotes.add(note);
                 this.handleNote(note, 100, true);
             }
         });
 
-        this.keyboard.addEventListener('mouseup', (e) => {
-            const target = e.target as HTMLElement;
-            if (target.dataset.note) {
-                const note = parseInt(target.dataset.note);
-                this.handleNote(note, 0, false);
-            }
+        // Mouseup auf document, damit es immer ausgelöst wird
+        document.addEventListener('mouseup', () => {
+            this.releaseAllVirtualNotes();
         });
 
-        this.keyboard.addEventListener('mouseleave', (e) => {
-            const target = e.target as HTMLElement;
-            if (target.dataset.note) {
-                const note = parseInt(target.dataset.note);
-                this.handleNote(note, 0, false);
-            }
+        // Wenn Maus das Keyboard verlässt, alle loslassen
+        this.keyboard.addEventListener('mouseleave', () => {
+            this.releaseAllVirtualNotes();
         });
+    }
+
+    private releaseAllVirtualNotes(): void {
+        this.virtualPressedNotes.forEach(note => {
+            this.handleNote(note, 0, false);
+        });
+        this.virtualPressedNotes.clear();
     }
 
     private isBlackKey(note: number): boolean {
