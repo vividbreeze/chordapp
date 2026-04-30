@@ -246,3 +246,206 @@ header h1 {
     background: linear-gradient(180deg, #9b59b6 0%, #8e44ad 100%);
 }
 
+/* Practice Mode Section */
+.practice-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.practice-section h2 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.practice-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.practice-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.setting-group > label {
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 500;
+}
+
+.setting-group select,
+.setting-group input[type="number"] {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-size: 0.95rem;
+}
+
+.setting-group select:focus,
+.setting-group input[type="number"]:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #3498db;
+}
+
+.practice-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.practice-btn {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.practice-btn.start {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+}
+
+.practice-btn.start:hover {
+    background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
+}
+
+.practice-btn.stop {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+}
+
+.practice-btn.stop:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+}
+
+.practice-btn.hidden {
+    display: none;
+}
+
+/* Practice Display */
+.practice-display {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.practice-display.hidden {
+    display: none;
+}
+
+.target-chord {
+    margin-bottom: 1rem;
+}
+
+.target-chord .label {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.target-chord-name {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #f39c12;
+    line-height: 1.2;
+}
+
+.target-chord-notes {
+    font-size: 1rem;
+    color: #888;
+    margin-top: 0.5rem;
+}
+
+.practice-feedback {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 1rem 0;
+}
+
+.practice-result {
+    font-size: 1.5rem;
+    font-weight: bold;
+    min-width: 120px;
+    height: 2rem;
+}
+
+.practice-result.success {
+    color: #2ecc71;
+}
+
+.practice-result.timeout {
+    color: #e74c3c;
+}
+
+.practice-timer {
+    width: 100%;
+    max-width: 300px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.practice-timer-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+    transition: width 0.1s linear;
+}
+
+.practice-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #888;
+}
+
+.practice-stats strong {
+    color: #fff;
+}
+
+.hidden {
+    display: none !important;
+}

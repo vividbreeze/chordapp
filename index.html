@@ -1,45 +1,138 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Akkord-Erkennung</title>
+    <title>MIDI Chord Recognition</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>MIDI Akkord-Erkennung</h1>
-            <p class="subtitle">Verbinde dein MIDI-Keyboard und spiele Noten oder Akkorde</p>
+            <h1>MIDI Chord Recognition</h1>
+            <p class="subtitle">Connect your MIDI keyboard and play notes or chords</p>
         </header>
 
         <section id="midi-status" class="status-section">
             <div class="status-indicator disconnected" id="status-indicator"></div>
-            <span id="status-text">MIDI nicht verbunden</span>
-            <button id="connect-btn">MIDI verbinden</button>
+            <span id="status-text">MIDI not connected</span>
+            <button id="connect-btn">Connect MIDI</button>
         </section>
 
         <section id="device-section" class="device-section hidden">
-            <h2>Verbundene Geräte</h2>
+            <h2>Connected Devices</h2>
             <ul id="device-list"></ul>
         </section>
 
         <section class="display-section">
             <div class="chord-display">
-                <h2>Erkannter Akkord</h2>
+                <h2>Detected Chord</h2>
                 <div id="chord-name" class="chord-name">-</div>
                 <div id="chord-notes" class="chord-notes"></div>
             </div>
 
             <div class="notes-display">
-                <h2>Gespielte Noten</h2>
+                <h2>Played Notes</h2>
                 <div id="active-notes" class="active-notes"></div>
             </div>
         </section>
 
         <section class="keyboard-section">
-            <h2>Virtuelle Tastatur</h2>
+            <h2>Virtual Keyboard</h2>
             <div id="keyboard" class="keyboard"></div>
+        </section>
+
+        <!-- Practice Mode Section -->
+        <section class="practice-section">
+            <h2>Practice Mode</h2>
+
+            <div class="practice-controls">
+                <div class="practice-settings">
+                    <div class="setting-group">
+                        <label>Root Selection</label>
+                        <select id="root-selection">
+                            <option value="chromatic">Chromatic</option>
+                            <option value="circleOfFifths">Circle of Fifths</option>
+                            <option value="random">Random</option>
+                            <option value="diatonic">Diatonic</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Key</label>
+                        <select id="target-key">
+                            <option value="C">C Major</option>
+                            <option value="G">G Major</option>
+                            <option value="D">D Major</option>
+                            <option value="A">A Major</option>
+                            <option value="E">E Major</option>
+                            <option value="B">B Major</option>
+                            <option value="F#">F# Major</option>
+                            <option value="F">F Major</option>
+                            <option value="Bb">Bb Major</option>
+                            <option value="Eb">Eb Major</option>
+                            <option value="Ab">Ab Major</option>
+                            <option value="Db">Db Major</option>
+                            <option value="Am">A Minor</option>
+                            <option value="Em">E Minor</option>
+                            <option value="Bm">B Minor</option>
+                            <option value="Dm">D Minor</option>
+                            <option value="Gm">G Minor</option>
+                            <option value="Cm">C Minor</option>
+                            <option value="Fm">F Minor</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Chord Qualities</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="quality-major" checked> Major</label>
+                            <label><input type="checkbox" id="quality-minor"> Minor</label>
+                            <label><input type="checkbox" id="quality-dim"> Diminished</label>
+                            <label><input type="checkbox" id="quality-7th"> 7th</label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Voicing</label>
+                        <select id="voicing-mode">
+                            <option value="rootPosition">Root Position</option>
+                            <option value="randomInversion">Random Inversion</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>BPM</label>
+                        <input type="number" id="practice-bpm" value="60" min="20" max="200">
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Bars per Chord</label>
+                        <input type="number" id="bars-per-chord" value="2" min="1" max="8">
+                    </div>
+                </div>
+
+                <div class="practice-actions">
+                    <button id="practice-start" class="practice-btn start">Start Practice</button>
+                    <button id="practice-stop" class="practice-btn stop hidden">Stop Practice</button>
+                </div>
+            </div>
+
+            <div id="practice-display" class="practice-display hidden">
+                <div class="target-chord">
+                    <span class="label">Play this chord:</span>
+                    <div id="target-chord-name" class="target-chord-name">-</div>
+                    <div id="target-chord-notes" class="target-chord-notes"></div>
+                </div>
+                <div class="practice-feedback">
+                    <div id="practice-result" class="practice-result"></div>
+                    <div id="practice-timer" class="practice-timer"></div>
+                </div>
+                <div class="practice-stats">
+                    <span>Correct: <strong id="stat-correct">0</strong></span>
+                    <span>Missed: <strong id="stat-missed">0</strong></span>
+                </div>
+            </div>
         </section>
 
     </div>
