@@ -83,22 +83,49 @@
                         </select>
                     </div>
 
-                    <div class="setting-group">
-                        <label>Chord Qualities</label>
+                    <div class="setting-group setting-group-wide">
+                        <label>Triads</label>
                         <div class="checkbox-group">
                             <label><input type="checkbox" id="quality-major" checked> Major</label>
                             <label><input type="checkbox" id="quality-minor"> Minor</label>
                             <label><input type="checkbox" id="quality-dim"> Diminished</label>
-                            <label><input type="checkbox" id="quality-7th"> 7th</label>
+                            <label><input type="checkbox" id="quality-aug"> Augmented</label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group setting-group-wide">
+                        <label>7th Chords</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="quality-maj7"> maj7</label>
+                            <label><input type="checkbox" id="quality-dom7"> 7 (Dominant)</label>
+                            <label><input type="checkbox" id="quality-m7"> m7</label>
+                            <label><input type="checkbox" id="quality-m7b5"> m7b5 (Half-Dim)</label>
                         </div>
                     </div>
 
                     <div class="setting-group">
-                        <label>Voicing</label>
+                        <label>Extensions</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="quality-add9"> add9</label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Voicing / Inversion</label>
                         <select id="voicing-mode">
                             <option value="rootPosition">Root Position</option>
+                            <option value="firstInversion">1st Inversion (3rd in bass)</option>
+                            <option value="secondInversion">2nd Inversion (5th in bass)</option>
+                            <option value="thirdInversion">3rd Inversion (7th in bass)</option>
                             <option value="randomInversion">Random Inversion</option>
                         </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Voice Leading</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="smooth-transitions"> Smooth Transitions</label>
+                        </div>
                     </div>
 
                     <div class="setting-group">

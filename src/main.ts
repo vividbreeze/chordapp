@@ -23,11 +23,21 @@ class ChordApp {
     // Practice Mode UI Elements
     private rootSelection!: HTMLSelectElement;
     private targetKey!: HTMLSelectElement;
+    // Triads
     private qualityMajor!: HTMLInputElement;
     private qualityMinor!: HTMLInputElement;
     private qualityDim!: HTMLInputElement;
-    private quality7th!: HTMLInputElement;
+    private qualityAug!: HTMLInputElement;
+    // 7th Chords
+    private qualityMaj7!: HTMLInputElement;
+    private qualityDom7!: HTMLInputElement;
+    private qualityM7!: HTMLInputElement;
+    private qualityM7b5!: HTMLInputElement;
+    // Extensions
+    private qualityAdd9!: HTMLInputElement;
+    // Other settings
     private voicingMode!: HTMLSelectElement;
+    private smoothTransitions!: HTMLInputElement;
     private practiceBpm!: HTMLInputElement;
     private barsPerChord!: HTMLInputElement;
     private practiceStartBtn!: HTMLButtonElement;
@@ -66,11 +76,21 @@ class ChordApp {
         // Practice Mode UI Elements
         this.rootSelection = document.getElementById('root-selection') as HTMLSelectElement;
         this.targetKey = document.getElementById('target-key') as HTMLSelectElement;
+        // Triads
         this.qualityMajor = document.getElementById('quality-major') as HTMLInputElement;
         this.qualityMinor = document.getElementById('quality-minor') as HTMLInputElement;
         this.qualityDim = document.getElementById('quality-dim') as HTMLInputElement;
-        this.quality7th = document.getElementById('quality-7th') as HTMLInputElement;
+        this.qualityAug = document.getElementById('quality-aug') as HTMLInputElement;
+        // 7th Chords
+        this.qualityMaj7 = document.getElementById('quality-maj7') as HTMLInputElement;
+        this.qualityDom7 = document.getElementById('quality-dom7') as HTMLInputElement;
+        this.qualityM7 = document.getElementById('quality-m7') as HTMLInputElement;
+        this.qualityM7b5 = document.getElementById('quality-m7b5') as HTMLInputElement;
+        // Extensions
+        this.qualityAdd9 = document.getElementById('quality-add9') as HTMLInputElement;
+        // Other settings
         this.voicingMode = document.getElementById('voicing-mode') as HTMLSelectElement;
+        this.smoothTransitions = document.getElementById('smooth-transitions') as HTMLInputElement;
         this.practiceBpm = document.getElementById('practice-bpm') as HTMLInputElement;
         this.barsPerChord = document.getElementById('bars-per-chord') as HTMLInputElement;
         this.practiceStartBtn = document.getElementById('practice-start') as HTMLButtonElement;
@@ -105,12 +125,21 @@ class ChordApp {
         this.rootSelection.addEventListener('change', () => this.updatePracticeSettings());
         this.targetKey.addEventListener('change', () => this.updatePracticeSettings());
         this.voicingMode.addEventListener('change', () => this.updatePracticeSettings());
+        this.smoothTransitions.addEventListener('change', () => this.updatePracticeSettings());
         this.practiceBpm.addEventListener('change', () => this.updatePracticeSettings());
         this.barsPerChord.addEventListener('change', () => this.updatePracticeSettings());
+        // Triads
         this.qualityMajor.addEventListener('change', () => this.updatePracticeSettings());
         this.qualityMinor.addEventListener('change', () => this.updatePracticeSettings());
         this.qualityDim.addEventListener('change', () => this.updatePracticeSettings());
-        this.quality7th.addEventListener('change', () => this.updatePracticeSettings());
+        this.qualityAug.addEventListener('change', () => this.updatePracticeSettings());
+        // 7th Chords
+        this.qualityMaj7.addEventListener('change', () => this.updatePracticeSettings());
+        this.qualityDom7.addEventListener('change', () => this.updatePracticeSettings());
+        this.qualityM7.addEventListener('change', () => this.updatePracticeSettings());
+        this.qualityM7b5.addEventListener('change', () => this.updatePracticeSettings());
+        // Extensions
+        this.qualityAdd9.addEventListener('change', () => this.updatePracticeSettings());
     }
 
     private async connectMidi(): Promise<void> {
@@ -193,10 +222,21 @@ class ChordApp {
     // Practice Mode Methods
     private updatePracticeSettings(): void {
         const qualities: ChordQuality[] = [];
+
+        // Triads
         if (this.qualityMajor.checked) qualities.push('Major');
         if (this.qualityMinor.checked) qualities.push('Minor');
         if (this.qualityDim.checked) qualities.push('Diminished');
-        if (this.quality7th.checked) qualities.push('7th');
+        if (this.qualityAug.checked) qualities.push('Augmented');
+
+        // 7th Chords
+        if (this.qualityMaj7.checked) qualities.push('maj7');
+        if (this.qualityDom7.checked) qualities.push('7');
+        if (this.qualityM7.checked) qualities.push('m7');
+        if (this.qualityM7b5.checked) qualities.push('m7b5');
+
+        // Extensions
+        if (this.qualityAdd9.checked) qualities.push('add9');
 
         // Ensure at least one quality is selected
         if (qualities.length === 0) {
@@ -208,6 +248,7 @@ class ChordApp {
             rootSelection: this.rootSelection.value as RootSelection,
             targetKey: this.targetKey.value,
             voicingMode: this.voicingMode.value as VoicingMode,
+            smoothTransitions: this.smoothTransitions.checked,
             bpm: parseInt(this.practiceBpm.value) || 60,
             barsPerChord: parseInt(this.barsPerChord.value) || 2,
         });

@@ -279,6 +279,16 @@ header h1 {
     gap: 0.5rem;
 }
 
+.setting-group-wide {
+    grid-column: span 2;
+}
+
+@media (max-width: 500px) {
+    .setting-group-wide {
+        grid-column: span 1;
+    }
+}
+
 .setting-group > label {
     font-size: 0.85rem;
     color: #888;
