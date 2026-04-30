@@ -405,6 +405,57 @@ header h1 {
     margin-top: 0.5rem;
 }
 
+/* Hint Keyboard - Shows which keys to play */
+.hint-keyboard-container {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.hint-keyboard {
+    position: relative;
+    height: 70px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 8px;
+    display: inline-flex;
+}
+
+.hint-keyboard-inner {
+    position: relative;
+    height: 54px;
+}
+
+.hint-white-key {
+    width: 28px;
+    height: 54px;
+    background: linear-gradient(180deg, #e8e8e8 0%, #ccc 100%);
+    border: 1px solid #999;
+    border-radius: 0 0 4px 4px;
+    position: absolute;
+    z-index: 1;
+}
+
+.hint-white-key.highlight {
+    background: linear-gradient(180deg, #f39c12 0%, #e67e22 100%);
+    border-color: #d35400;
+    box-shadow: 0 0 12px rgba(243, 156, 18, 0.6);
+}
+
+.hint-black-key {
+    width: 18px;
+    height: 34px;
+    background: linear-gradient(180deg, #333 0%, #111 100%);
+    border-radius: 0 0 3px 3px;
+    position: absolute;
+    z-index: 2;
+}
+
+.hint-black-key.highlight {
+    background: linear-gradient(180deg, #e67e22 0%, #d35400 100%);
+    box-shadow: 0 0 12px rgba(230, 126, 34, 0.6);
+}
+
 .practice-feedback {
     display: flex;
     justify-content: center;

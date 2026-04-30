@@ -45,6 +45,7 @@ class ChordApp {
     private practiceDisplay!: HTMLElement;
     private targetChordName!: HTMLElement;
     private targetChordNotes!: HTMLElement;
+    private hintKeyboard!: HTMLElement;
     private practiceResult!: HTMLElement;
     private practiceTimer!: HTMLElement;
     private statCorrect!: HTMLElement;
@@ -60,6 +61,7 @@ class ChordApp {
         this.initUI();
         this.setupEventListeners();
         this.createKeyboard();
+        this.createHintKeyboard();
     }
 
     private initUI(): void {
@@ -98,6 +100,7 @@ class ChordApp {
         this.practiceDisplay = document.getElementById('practice-display')!;
         this.targetChordName = document.getElementById('target-chord-name')!;
         this.targetChordNotes = document.getElementById('target-chord-notes')!;
+        this.hintKeyboard = document.getElementById('hint-keyboard')!;
         this.practiceResult = document.getElementById('practice-result')!;
         this.practiceTimer = document.getElementById('practice-timer')!;
         this.statCorrect = document.getElementById('stat-correct')!;
@@ -284,6 +287,7 @@ class ChordApp {
     private onNewChord(chord: ChordChallenge): void {
         this.targetChordName.textContent = chord.displaySymbol;
         this.targetChordNotes.textContent = `Notes: ${chord.requiredMidiNotes.map(n => midiNoteToName(n)).join(' - ')}`;
+        this.updateHintKeyboard(chord.requiredMidiNotes);
         this.practiceResult.textContent = '';
         this.practiceResult.className = 'practice-result';
         this.startTimerAnimation();
@@ -313,6 +317,64 @@ class ChordApp {
     private updateStatsDisplay(): void {
         this.statCorrect.textContent = this.practiceStats.correct.toString();
         this.statMissed.textContent = this.practiceStats.missed.toString();
+    }
+
+    private createHintKeyboard(): void {
+        // Create a 2-octave hint keyboard (C4 to B5) centered around middle C
+        const startNote = 48; // C3
+        const endNote = 77; // F5
+
+        const whiteKeyWidth = 28;
+        const blackKeyWidth = 18;
+
+        let whiteKeyCount = 0;
+        for (let note = startNote; note <= endNote; note++) {
+            if (!this.isBlackKey(note)) whiteKeyCount++;
+        }
+
+        const keyboardInner = document.createElement('div');
+        keyboardInner.className = 'hint-keyboard-inner';
+        keyboardInner.style.width = `${whiteKeyCount * whiteKeyWidth}px`;
+
+        let whiteKeyIndex = 0;
+
+        for (let note = startNote; note <= endNote; note++) {
+            const isBlack = this.isBlackKey(note);
+
+            if (isBlack) {
+                const blackKey = document.createElement('div');
+                blackKey.className = 'hint-black-key';
+                blackKey.dataset.hintNote = note.toString();
+                const offset = whiteKeyIndex * whiteKeyWidth - (blackKeyWidth / 2);
+                blackKey.style.left = `${offset}px`;
+                keyboardInner.appendChild(blackKey);
+            } else {
+                const whiteKey = document.createElement('div');
+                whiteKey.className = 'hint-white-key';
+                whiteKey.dataset.hintNote = note.toString();
+                whiteKey.style.left = `${whiteKeyIndex * whiteKeyWidth}px`;
+                keyboardInner.appendChild(whiteKey);
+                whiteKeyIndex++;
+            }
+        }
+
+        this.hintKeyboard.appendChild(keyboardInner);
+    }
+
+    private updateHintKeyboard(midiNotes: number[]): void {
+        // Clear all highlights
+        const allKeys = this.hintKeyboard.querySelectorAll('[data-hint-note]');
+        allKeys.forEach(key => key.classList.remove('highlight'));
+
+        // Highlight the required notes (match by pitch class, any octave in range)
+        const pitchClasses = new Set(midiNotes.map(n => n % 12));
+
+        allKeys.forEach(key => {
+            const keyNote = parseInt((key as HTMLElement).dataset.hintNote || '0');
+            if (pitchClasses.has(keyNote % 12)) {
+                key.classList.add('highlight');
+            }
+        });
     }
 
     private startTimerAnimation(): void {
