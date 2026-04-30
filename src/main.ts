@@ -320,9 +320,9 @@ class ChordApp {
     }
 
     private createHintKeyboard(): void {
-        // Create a 2-octave hint keyboard centered around middle C
+        // Create hint keyboard from C3 to C6 (covers most chord voicings)
         const startNote = 48; // C3
-        const endNote = 77; // F5
+        const endNote = 84; // C6
 
         const whiteKeyWidth = 20;
         const blackKeyWidth = 14;
@@ -352,6 +352,7 @@ class ChordApp {
                 const whiteKey = document.createElement('div');
                 whiteKey.className = 'hint-white-key';
                 whiteKey.dataset.hintNote = note.toString();
+                whiteKey.style.position = 'absolute';
                 whiteKey.style.left = `${whiteKeyIndex * whiteKeyWidth}px`;
                 keyboardInner.appendChild(whiteKey);
                 whiteKeyIndex++;
