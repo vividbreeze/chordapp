@@ -617,10 +617,79 @@ header h1 {
     margin: 0.5rem 0;
 }
 
+.timing-meter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.timing-label {
+    font-size: 0.7rem;
+    color: #888;
+    width: 35px;
+    text-align: center;
+}
+
+.timing-track {
+    position: relative;
+    width: 200px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    display: flex;
+    overflow: hidden;
+}
+
+.timing-zone {
+    flex: 1;
+    height: 100%;
+}
+
+.timing-zone.early {
+    background: linear-gradient(90deg, #e74c3c 0%, #f39c12 100%);
+}
+
+.timing-zone.good-left {
+    background: linear-gradient(90deg, #f39c12 0%, #3498db 100%);
+}
+
+.timing-zone.perfect {
+    background: #2ecc71;
+    flex: 0.6;
+}
+
+.timing-zone.good-right {
+    background: linear-gradient(90deg, #3498db 0%, #f39c12 100%);
+}
+
+.timing-zone.late {
+    background: linear-gradient(90deg, #f39c12 0%, #e74c3c 100%);
+}
+
+.timing-needle {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 4px;
+    height: 28px;
+    background: #fff;
+    border-radius: 2px;
+    transform: translateX(-50%);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    transition: left 0.1s ease-out;
+    opacity: 0;
+}
+
+.timing-needle.visible {
+    opacity: 1;
+}
+
 .rhythm-timing {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
-    height: 1.5rem;
+    height: 1.2rem;
 }
 
 .rhythm-timing.perfect {

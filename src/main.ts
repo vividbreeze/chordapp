@@ -65,6 +65,7 @@ class ChordApp {
     private rhythmPerfect!: HTMLElement;
     private rhythmGood!: HTMLElement;
     private rhythmMissed!: HTMLElement;
+    private timingNeedle!: HTMLElement;
 
     // Practice Mode State
     private practiceStats = { correct: 0, missed: 0 };
@@ -137,6 +138,7 @@ class ChordApp {
         this.rhythmPerfect = document.getElementById('rhythm-perfect')!;
         this.rhythmGood = document.getElementById('rhythm-good')!;
         this.rhythmMissed = document.getElementById('rhythm-missed')!;
+        this.timingNeedle = document.getElementById('timing-needle')!;
     }
 
     private setupEventListeners(): void {
@@ -627,6 +629,16 @@ class ChordApp {
         }
         this.updateRhythmStatsDisplay();
 
+        // Update timing needle position
+        // offsetMs: negative = early, positive = late
+        // Map -150ms to 0%, 0ms to 50%, +150ms to 100%
+        const maxOffset = 150;
+        const clampedOffset = Math.max(-maxOffset, Math.min(maxOffset, offsetMs));
+        const needlePosition = 50 + (clampedOffset / maxOffset) * 50;
+
+        this.timingNeedle.style.left = `${needlePosition}%`;
+        this.timingNeedle.classList.add('visible');
+
         // Show timing feedback
         const labels = {
             perfect: 'Perfect!',
@@ -642,7 +654,8 @@ class ChordApp {
         setTimeout(() => {
             this.rhythmTiming.textContent = '';
             this.rhythmTiming.className = 'rhythm-timing';
-        }, 300);
+            this.timingNeedle.classList.remove('visible');
+        }, 500);
     }
 
     private updateRhythmStatsDisplay(): void {
