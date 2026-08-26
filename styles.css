@@ -566,6 +566,111 @@ header h1 {
     color: white;
 }
 
+/* Scale Settings */
+.scale-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scale-settings.hidden {
+    display: none;
+}
+
+/* Scale Display */
+.scale-display {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scale-display.hidden {
+    display: none;
+}
+
+.scale-info {
+    margin-bottom: 0.5rem;
+}
+
+.scale-name {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #9b59b6;
+}
+
+.scale-notes-display {
+    display: block;
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 0.25rem;
+}
+
+.scale-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+}
+
+.next-note-label {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.next-note {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f39c12;
+    min-width: 50px;
+}
+
+.scale-progress-bar {
+    width: 150px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.scale-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #9b59b6 0%, #3498db 100%);
+    transition: width 0.2s ease;
+    width: 0%;
+}
+
+.scale-feedback {
+    font-size: 1rem;
+    font-weight: bold;
+    height: 1.2rem;
+    margin: 0.25rem 0;
+}
+
+.scale-feedback.hidden {
+    display: none;
+}
+
+.scale-feedback.correct {
+    color: #2ecc71;
+}
+
+.scale-feedback.wrong {
+    color: #e74c3c;
+}
+
+.scale-feedback.in-scale {
+    color: #3498db;
+}
+
+.scale-feedback.complete {
+    color: #f39c12;
+}
+
 .rhythm-display {
     margin-top: 0.75rem;
     padding: 0.75rem;

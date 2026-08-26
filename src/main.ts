@@ -4,6 +4,7 @@ import { MidiHandler, midiNoteToName } from './midi.js';
 import { chordRecognizer, ChordResult } from './chords.js';
 import { practiceEngine, ChordChallenge, ChordQuality, RootSelection, VoicingMode } from './practice.js';
 import { rhythmEngine, RhythmMode } from './rhythm.js';
+import { scaleTrainer, ScaleType, SCALE_NAMES } from './scales.js';
 
 class ChordApp {
     private midiHandler: MidiHandler;
@@ -67,6 +68,20 @@ class ChordApp {
     private rhythmMissed!: HTMLElement;
     private timingNeedle!: HTMLElement;
 
+    // Scale Training UI Elements
+    private scaleSettings!: HTMLElement;
+    private scaleRoot!: HTMLSelectElement;
+    private scaleType!: HTMLSelectElement;
+    private scaleDirection!: HTMLSelectElement;
+    private scaleHints!: HTMLInputElement;
+    private scaleDisplay!: HTMLElement;
+    private scaleName!: HTMLElement;
+    private scaleNotesDisplay!: HTMLElement;
+    private nextNote!: HTMLElement;
+    private scaleProgressFill!: HTMLElement;
+    private scaleHintKeyboard!: HTMLElement;
+    private scaleFeedback!: HTMLElement;
+
     // Practice Mode State
     private practiceStats = { correct: 0, missed: 0 };
     private timerInterval: number | null = null;
@@ -74,6 +89,7 @@ class ChordApp {
 
     // Rhythm Training State
     private rhythmStats = { perfect: 0, good: 0, missed: 0 };
+    private isScaleMode = false;
 
     constructor() {
         this.midiHandler = new MidiHandler();
@@ -139,6 +155,20 @@ class ChordApp {
         this.rhythmGood = document.getElementById('rhythm-good')!;
         this.rhythmMissed = document.getElementById('rhythm-missed')!;
         this.timingNeedle = document.getElementById('timing-needle')!;
+
+        // Scale Training UI Elements
+        this.scaleSettings = document.getElementById('scale-settings')!;
+        this.scaleRoot = document.getElementById('scale-root') as HTMLSelectElement;
+        this.scaleType = document.getElementById('scale-type') as HTMLSelectElement;
+        this.scaleDirection = document.getElementById('scale-direction') as HTMLSelectElement;
+        this.scaleHints = document.getElementById('scale-hints') as HTMLInputElement;
+        this.scaleDisplay = document.getElementById('scale-display')!;
+        this.scaleName = document.getElementById('scale-name')!;
+        this.scaleNotesDisplay = document.getElementById('scale-notes-display')!;
+        this.nextNote = document.getElementById('next-note')!;
+        this.scaleProgressFill = document.getElementById('scale-progress-fill')!;
+        this.scaleHintKeyboard = document.getElementById('scale-hint-keyboard')!;
+        this.scaleFeedback = document.getElementById('scale-feedback')!;
     }
 
     private setupEventListeners(): void {
@@ -183,8 +213,14 @@ class ChordApp {
         this.rhythmStopBtn.addEventListener('click', () => this.stopRhythm());
         this.rhythmBpm.addEventListener('change', () => this.updateRhythmSettings());
         this.rhythmTimeSig.addEventListener('change', () => this.updateRhythmSettings());
-        this.rhythmMode.addEventListener('change', () => this.updateRhythmSettings());
+        this.rhythmMode.addEventListener('change', () => this.onRhythmModeChange());
         this.rhythmCountIn.addEventListener('change', () => this.updateRhythmSettings());
+
+        // Scale Training event listeners
+        this.scaleRoot.addEventListener('change', () => this.updateScaleSettings());
+        this.scaleType.addEventListener('change', () => this.updateScaleSettings());
+        this.scaleDirection.addEventListener('change', () => this.updateScaleSettings());
+        this.scaleHints.addEventListener('change', () => this.updateScaleSettings());
     }
 
     private async connectMidi(): Promise<void> {
@@ -237,6 +273,11 @@ class ChordApp {
         // Register rhythm hit on note-on
         if (isNoteOn && rhythmEngine.isActive()) {
             rhythmEngine.registerHit();
+        }
+
+        // Check scale note on note-on
+        if (isNoteOn && this.isScaleMode) {
+            this.checkScaleNote(note);
         }
     }
 
@@ -577,6 +618,11 @@ class ChordApp {
         this.rhythmTiming.textContent = '';
         this.rhythmTiming.className = 'rhythm-timing';
 
+        // Start scale mode if selected
+        if (this.rhythmMode.value === 'scales') {
+            this.startScaleMode();
+        }
+
         // Set up callbacks
         rhythmEngine.onBeat((event) => this.onBeat(event));
         rhythmEngine.onHit((timing, offset) => this.onRhythmHit(timing, offset));
@@ -589,6 +635,11 @@ class ChordApp {
         this.rhythmStartBtn.classList.remove('hidden');
         this.rhythmStopBtn.classList.add('hidden');
         this.rhythmDisplay.classList.add('hidden');
+
+        // Stop scale mode if active
+        if (this.isScaleMode) {
+            this.stopScaleMode();
+        }
     }
 
     private createBeatDots(): void {
@@ -662,6 +713,159 @@ class ChordApp {
         this.rhythmPerfect.textContent = this.rhythmStats.perfect.toString();
         this.rhythmGood.textContent = this.rhythmStats.good.toString();
         this.rhythmMissed.textContent = this.rhythmStats.missed.toString();
+    }
+
+    // Scale Training Methods
+    private onRhythmModeChange(): void {
+        const mode = this.rhythmMode.value;
+        this.isScaleMode = mode === 'scales';
+
+        if (this.isScaleMode) {
+            this.scaleSettings.classList.remove('hidden');
+            this.updateScaleSettings();
+        } else {
+            this.scaleSettings.classList.add('hidden');
+        }
+
+        this.updateRhythmSettings();
+    }
+
+    private updateScaleSettings(): void {
+        scaleTrainer.updateSettings({
+            root: this.scaleRoot.value,
+            scaleType: this.scaleType.value as ScaleType,
+            direction: this.scaleDirection.value as 'ascending' | 'descending' | 'both',
+            showHints: this.scaleHints.checked
+        });
+    }
+
+    private startScaleMode(): void {
+        this.isScaleMode = true;
+        this.updateScaleSettings();
+        scaleTrainer.start(3); // Start at octave 3
+
+        // Show scale display
+        this.scaleDisplay.classList.remove('hidden');
+        this.scaleFeedback.classList.remove('hidden');
+
+        // Update scale info
+        const settings = scaleTrainer.getSettings();
+        this.scaleName.textContent = `${settings.root} ${SCALE_NAMES[settings.scaleType]}`;
+        this.scaleNotesDisplay.textContent = scaleTrainer.getScaleNotes().join(' - ');
+
+        // Create scale hint keyboard
+        this.createScaleHintKeyboard();
+
+        // Update next note display
+        this.updateScaleDisplay();
+    }
+
+    private stopScaleMode(): void {
+        scaleTrainer.stop();
+        this.scaleDisplay.classList.add('hidden');
+        this.scaleFeedback.classList.add('hidden');
+        this.isScaleMode = false;
+    }
+
+    private createScaleHintKeyboard(): void {
+        this.scaleHintKeyboard.innerHTML = '';
+
+        const startNote = 48; // C3
+        const endNote = 84; // C6
+        const whiteKeyWidth = 16;
+        const blackKeyWidth = 10;
+
+        let whiteKeyCount = 0;
+        for (let note = startNote; note <= endNote; note++) {
+            if (!this.isBlackKey(note)) whiteKeyCount++;
+        }
+
+        const keyboardInner = document.createElement('div');
+        keyboardInner.className = 'hint-keyboard-inner';
+        keyboardInner.style.width = `${whiteKeyCount * whiteKeyWidth}px`;
+
+        const scalePitchClasses = scaleTrainer.getScalePitchClasses();
+        let whiteKeyIndex = 0;
+
+        for (let note = startNote; note <= endNote; note++) {
+            const isBlack = this.isBlackKey(note);
+            const isInScale = scalePitchClasses.has(note % 12);
+
+            if (isBlack) {
+                const blackKey = document.createElement('div');
+                blackKey.className = 'hint-black-key' + (isInScale ? ' highlight' : '');
+                blackKey.dataset.scaleNote = note.toString();
+                const offset = whiteKeyIndex * whiteKeyWidth - (blackKeyWidth / 2);
+                blackKey.style.left = `${offset}px`;
+                keyboardInner.appendChild(blackKey);
+            } else {
+                const whiteKey = document.createElement('div');
+                whiteKey.className = 'hint-white-key' + (isInScale ? ' highlight' : '');
+                whiteKey.dataset.scaleNote = note.toString();
+                whiteKey.style.position = 'absolute';
+                whiteKey.style.left = `${whiteKeyIndex * whiteKeyWidth}px`;
+                whiteKey.style.width = `${whiteKeyWidth}px`;
+                whiteKey.style.height = '32px';
+                keyboardInner.appendChild(whiteKey);
+                whiteKeyIndex++;
+            }
+        }
+
+        this.scaleHintKeyboard.appendChild(keyboardInner);
+    }
+
+    private checkScaleNote(midiNote: number): void {
+        if (!scaleTrainer.isRunning()) {
+            // Free play - just show if note is in scale
+            const result = scaleTrainer.checkNote(midiNote);
+            this.showScaleFeedback(result);
+            return;
+        }
+
+        const result = scaleTrainer.checkNote(midiNote);
+        this.showScaleFeedback(result);
+        this.updateScaleDisplay();
+
+        if (scaleTrainer.isComplete()) {
+            this.showScaleFeedback('complete');
+            setTimeout(() => {
+                scaleTrainer.start(3); // Restart scale
+                this.updateScaleDisplay();
+            }, 1500);
+        }
+    }
+
+    private showScaleFeedback(result: string): void {
+        const messages: Record<string, string> = {
+            correct: 'Correct!',
+            wrong: 'Wrong note!',
+            inScale: 'In scale',
+            outOfScale: 'Out of scale!',
+            complete: 'Scale complete!'
+        };
+
+        this.scaleFeedback.textContent = messages[result] || '';
+        this.scaleFeedback.className = `scale-feedback ${result === 'correct' || result === 'inScale' ? 'correct' : result === 'complete' ? 'complete' : 'wrong'}`;
+
+        if (result !== 'complete') {
+            setTimeout(() => {
+                this.scaleFeedback.textContent = '';
+                this.scaleFeedback.className = 'scale-feedback';
+            }, 400);
+        }
+    }
+
+    private updateScaleDisplay(): void {
+        const expectedNote = scaleTrainer.getCurrentExpectedNote();
+        if (expectedNote !== null) {
+            this.nextNote.textContent = midiNoteToName(expectedNote).replace(/\d+/, '');
+        } else {
+            this.nextNote.textContent = '-';
+        }
+
+        const progress = scaleTrainer.getProgress();
+        const percentage = progress.total > 0 ? (progress.current / progress.total) * 100 : 0;
+        this.scaleProgressFill.style.width = `${percentage}%`;
     }
 }
 
