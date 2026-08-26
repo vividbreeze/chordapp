@@ -3,6 +3,7 @@
 import { MidiHandler, midiNoteToName } from './midi.js';
 import { chordRecognizer, ChordResult } from './chords.js';
 import { practiceEngine, ChordChallenge, ChordQuality, RootSelection, VoicingMode } from './practice.js';
+import { rhythmEngine, RhythmMode } from './rhythm.js';
 
 class ChordApp {
     private midiHandler: MidiHandler;
@@ -51,10 +52,27 @@ class ChordApp {
     private statCorrect!: HTMLElement;
     private statMissed!: HTMLElement;
 
+    // Rhythm Training UI Elements
+    private rhythmMode!: HTMLSelectElement;
+    private rhythmBpm!: HTMLInputElement;
+    private rhythmTimeSig!: HTMLSelectElement;
+    private rhythmCountIn!: HTMLInputElement;
+    private rhythmStartBtn!: HTMLButtonElement;
+    private rhythmStopBtn!: HTMLButtonElement;
+    private rhythmDisplay!: HTMLElement;
+    private beatDots!: HTMLElement;
+    private rhythmTiming!: HTMLElement;
+    private rhythmPerfect!: HTMLElement;
+    private rhythmGood!: HTMLElement;
+    private rhythmMissed!: HTMLElement;
+
     // Practice Mode State
     private practiceStats = { correct: 0, missed: 0 };
     private timerInterval: number | null = null;
     private timerStartTime: number = 0;
+
+    // Rhythm Training State
+    private rhythmStats = { perfect: 0, good: 0, missed: 0 };
 
     constructor() {
         this.midiHandler = new MidiHandler();
@@ -105,6 +123,20 @@ class ChordApp {
         this.practiceTimer = document.getElementById('practice-timer')!;
         this.statCorrect = document.getElementById('stat-correct')!;
         this.statMissed = document.getElementById('stat-missed')!;
+
+        // Rhythm Training UI Elements
+        this.rhythmMode = document.getElementById('rhythm-mode') as HTMLSelectElement;
+        this.rhythmBpm = document.getElementById('rhythm-bpm') as HTMLInputElement;
+        this.rhythmTimeSig = document.getElementById('rhythm-time-sig') as HTMLSelectElement;
+        this.rhythmCountIn = document.getElementById('rhythm-count-in') as HTMLInputElement;
+        this.rhythmStartBtn = document.getElementById('rhythm-start') as HTMLButtonElement;
+        this.rhythmStopBtn = document.getElementById('rhythm-stop') as HTMLButtonElement;
+        this.rhythmDisplay = document.getElementById('rhythm-display')!;
+        this.beatDots = document.getElementById('beat-dots')!;
+        this.rhythmTiming = document.getElementById('rhythm-timing')!;
+        this.rhythmPerfect = document.getElementById('rhythm-perfect')!;
+        this.rhythmGood = document.getElementById('rhythm-good')!;
+        this.rhythmMissed = document.getElementById('rhythm-missed')!;
     }
 
     private setupEventListeners(): void {
@@ -143,6 +175,14 @@ class ChordApp {
         this.qualityM7b5.addEventListener('change', () => this.updatePracticeSettings());
         // Extensions
         this.qualityAdd9.addEventListener('change', () => this.updatePracticeSettings());
+
+        // Rhythm Training event listeners
+        this.rhythmStartBtn.addEventListener('click', () => this.startRhythm());
+        this.rhythmStopBtn.addEventListener('click', () => this.stopRhythm());
+        this.rhythmBpm.addEventListener('change', () => this.updateRhythmSettings());
+        this.rhythmTimeSig.addEventListener('change', () => this.updateRhythmSettings());
+        this.rhythmMode.addEventListener('change', () => this.updateRhythmSettings());
+        this.rhythmCountIn.addEventListener('change', () => this.updateRhythmSettings());
     }
 
     private async connectMidi(): Promise<void> {
@@ -190,6 +230,11 @@ class ChordApp {
         // Check practice mode answer
         if (practiceEngine.isActive() && this.activeNotes.size > 0) {
             this.checkPracticeAnswer();
+        }
+
+        // Register rhythm hit on note-on
+        if (isNoteOn && rhythmEngine.isActive()) {
+            rhythmEngine.registerHit();
         }
     }
 
@@ -503,6 +548,107 @@ class ChordApp {
                 key.classList.remove('active');
             }
         }
+    }
+
+    // Rhythm Training Methods
+    private updateRhythmSettings(): void {
+        rhythmEngine.updateSettings({
+            bpm: parseInt(this.rhythmBpm.value) || 80,
+            beatsPerMeasure: parseInt(this.rhythmTimeSig.value) || 4,
+            mode: this.rhythmMode.value as RhythmMode,
+            countIn: this.rhythmCountIn.checked
+        });
+    }
+
+    private async startRhythm(): Promise<void> {
+        this.updateRhythmSettings();
+        this.rhythmStats = { perfect: 0, good: 0, missed: 0 };
+        this.updateRhythmStatsDisplay();
+
+        // Create beat dots
+        this.createBeatDots();
+
+        // Show display, toggle buttons
+        this.rhythmDisplay.classList.remove('hidden');
+        this.rhythmStartBtn.classList.add('hidden');
+        this.rhythmStopBtn.classList.remove('hidden');
+        this.rhythmTiming.textContent = '';
+        this.rhythmTiming.className = 'rhythm-timing';
+
+        // Set up callbacks
+        rhythmEngine.onBeat((event) => this.onBeat(event));
+        rhythmEngine.onHit((timing, offset) => this.onRhythmHit(timing, offset));
+
+        await rhythmEngine.start();
+    }
+
+    private stopRhythm(): void {
+        rhythmEngine.stop();
+        this.rhythmStartBtn.classList.remove('hidden');
+        this.rhythmStopBtn.classList.add('hidden');
+        this.rhythmDisplay.classList.add('hidden');
+    }
+
+    private createBeatDots(): void {
+        const beatsPerMeasure = parseInt(this.rhythmTimeSig.value) || 4;
+        this.beatDots.innerHTML = '';
+
+        for (let i = 0; i < beatsPerMeasure; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'beat-dot' + (i === 0 ? ' downbeat' : '');
+            dot.textContent = (i + 1).toString();
+            dot.dataset.beat = (i + 1).toString();
+            this.beatDots.appendChild(dot);
+        }
+    }
+
+    private onBeat(event: { beat: number; measure: number; isDownbeat: boolean }): void {
+        // Skip count-in visually
+        if (event.measure < 0) return;
+
+        // Update beat dots
+        const dots = this.beatDots.querySelectorAll('.beat-dot');
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        const activeDot = this.beatDots.querySelector(`[data-beat="${event.beat}"]`);
+        if (activeDot) {
+            activeDot.classList.add('active');
+        }
+    }
+
+    private onRhythmHit(timing: 'perfect' | 'good' | 'early' | 'late' | 'miss', offsetMs: number): void {
+        // Update stats
+        if (timing === 'perfect') {
+            this.rhythmStats.perfect++;
+        } else if (timing === 'good') {
+            this.rhythmStats.good++;
+        } else {
+            this.rhythmStats.missed++;
+        }
+        this.updateRhythmStatsDisplay();
+
+        // Show timing feedback
+        const labels = {
+            perfect: 'Perfect!',
+            good: 'Good!',
+            early: 'Early',
+            late: 'Late',
+            miss: 'Miss'
+        };
+        this.rhythmTiming.textContent = labels[timing];
+        this.rhythmTiming.className = `rhythm-timing ${timing}`;
+
+        // Clear feedback after short delay
+        setTimeout(() => {
+            this.rhythmTiming.textContent = '';
+            this.rhythmTiming.className = 'rhythm-timing';
+        }, 300);
+    }
+
+    private updateRhythmStatsDisplay(): void {
+        this.rhythmPerfect.textContent = this.rhythmStats.perfect.toString();
+        this.rhythmGood.textContent = this.rhythmStats.good.toString();
+        this.rhythmMissed.textContent = this.rhythmStats.missed.toString();
     }
 }
 

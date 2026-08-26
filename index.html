@@ -165,6 +165,62 @@
             </div>
         </section>
 
+        <!-- Rhythm Training Section -->
+        <section class="rhythm-section">
+            <h2>Rhythm Training</h2>
+            <div class="rhythm-controls">
+                <div class="rhythm-settings">
+                    <div class="setting-group">
+                        <label>Mode</label>
+                        <select id="rhythm-mode">
+                            <option value="freeplay">Free Play (any key)</option>
+                            <option value="chords">With Chords</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>BPM</label>
+                        <input type="number" id="rhythm-bpm" value="80" min="40" max="200">
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Time Signature</label>
+                        <select id="rhythm-time-sig">
+                            <option value="4">4/4</option>
+                            <option value="3">3/4</option>
+                            <option value="2">2/4</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Options</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="rhythm-count-in" checked> Count In</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rhythm-actions">
+                    <button id="rhythm-start" class="rhythm-btn start">Start Metronome</button>
+                    <button id="rhythm-stop" class="rhythm-btn stop hidden">Stop</button>
+                </div>
+            </div>
+
+            <div id="rhythm-display" class="rhythm-display hidden">
+                <div class="beat-indicator">
+                    <div id="beat-dots" class="beat-dots"></div>
+                </div>
+                <div class="rhythm-feedback">
+                    <div id="rhythm-timing" class="rhythm-timing"></div>
+                </div>
+                <div class="rhythm-stats">
+                    <span>Perfect: <strong id="rhythm-perfect">0</strong></span>
+                    <span>Good: <strong id="rhythm-good">0</strong></span>
+                    <span>Missed: <strong id="rhythm-missed">0</strong></span>
+                </div>
+            </div>
+        </section>
+
     </div>
 
     <script type="module" src="dist/main.js"></script>

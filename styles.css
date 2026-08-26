@@ -509,6 +509,148 @@ header h1 {
     color: #fff;
 }
 
+/* Rhythm Training Section */
+.rhythm-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.rhythm-section h2 {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.rhythm-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.rhythm-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+}
+
+.rhythm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.rhythm-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.rhythm-btn.start {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    color: white;
+}
+
+.rhythm-btn.start:hover {
+    background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%);
+}
+
+.rhythm-btn.stop {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+}
+
+.rhythm-display {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.beat-indicator {
+    margin-bottom: 0.5rem;
+}
+
+.beat-dots {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.beat-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.beat-dot.active {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    border-color: #9b59b6;
+    transform: scale(1.2);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(155, 89, 182, 0.6);
+}
+
+.beat-dot.downbeat.active {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    border-color: #f39c12;
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.6);
+}
+
+.rhythm-feedback {
+    margin: 0.5rem 0;
+}
+
+.rhythm-timing {
+    font-size: 1.2rem;
+    font-weight: bold;
+    height: 1.5rem;
+}
+
+.rhythm-timing.perfect {
+    color: #2ecc71;
+}
+
+.rhythm-timing.good {
+    color: #3498db;
+}
+
+.rhythm-timing.early, .rhythm-timing.late {
+    color: #f39c12;
+}
+
+.rhythm-timing.miss {
+    color: #e74c3c;
+}
+
+.rhythm-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.rhythm-stats strong {
+    color: #fff;
+}
+
 .hidden {
     display: none !important;
 }
