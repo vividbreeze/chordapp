@@ -42,244 +42,204 @@
             <div id="keyboard" class="keyboard"></div>
         </section>
 
-        <!-- Practice Mode Section -->
+        <!-- Unified Practice Mode Section -->
         <section class="practice-section">
             <h2>Practice Mode</h2>
 
+            <!-- Mode Tabs -->
+            <div class="mode-tabs">
+                <button class="mode-tab active" data-mode="scales">Scales</button>
+                <button class="mode-tab" data-mode="chords">Chords</button>
+            </div>
+
             <div class="practice-controls">
-                <div class="practice-settings">
-                    <div class="setting-group">
-                        <label>Root Selection</label>
-                        <select id="root-selection">
-                            <option value="chromatic">Chromatic</option>
-                            <option value="circleOfFifths">Circle of Fifths</option>
-                            <option value="random">Random</option>
-                            <option value="diatonic">Diatonic</option>
-                        </select>
-                    </div>
+                <!-- Scale Settings -->
+                <div id="scale-settings" class="mode-settings">
+                    <div class="settings-row">
+                        <div class="setting-group">
+                            <label>Root Note</label>
+                            <select id="scale-root">
+                                <option value="C">C</option>
+                                <option value="C#">C# / Db</option>
+                                <option value="D">D</option>
+                                <option value="D#">D# / Eb</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="F#">F# / Gb</option>
+                                <option value="G">G</option>
+                                <option value="G#">G# / Ab</option>
+                                <option value="A" selected>A</option>
+                                <option value="A#">A# / Bb</option>
+                                <option value="B">B</option>
+                            </select>
+                        </div>
 
-                    <div class="setting-group">
-                        <label>Key</label>
-                        <select id="target-key">
-                            <option value="C">C Major</option>
-                            <option value="G">G Major</option>
-                            <option value="D">D Major</option>
-                            <option value="A">A Major</option>
-                            <option value="E">E Major</option>
-                            <option value="B">B Major</option>
-                            <option value="F#">F# Major</option>
-                            <option value="F">F Major</option>
-                            <option value="Bb">Bb Major</option>
-                            <option value="Eb">Eb Major</option>
-                            <option value="Ab">Ab Major</option>
-                            <option value="Db">Db Major</option>
-                            <option value="Am">A Minor</option>
-                            <option value="Em">E Minor</option>
-                            <option value="Bm">B Minor</option>
-                            <option value="Dm">D Minor</option>
-                            <option value="Gm">G Minor</option>
-                            <option value="Cm">C Minor</option>
-                            <option value="Fm">F Minor</option>
-                        </select>
-                    </div>
+                        <div class="setting-group">
+                            <label>Scale Type</label>
+                            <select id="scale-type">
+                                <option value="major">Major</option>
+                                <option value="naturalMinor" selected>Natural Minor</option>
+                                <option value="harmonicMinor">Harmonic Minor</option>
+                                <option value="melodicMinor">Melodic Minor</option>
+                                <option value="pentatonicMajor">Pentatonic Major</option>
+                                <option value="pentatonicMinor">Pentatonic Minor</option>
+                                <option value="blues">Blues</option>
+                                <option value="dorian">Dorian</option>
+                                <option value="mixolydian">Mixolydian</option>
+                            </select>
+                        </div>
 
-                    <div class="setting-group setting-group-wide">
-                        <label>Triads</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="quality-major" checked> Major</label>
-                            <label><input type="checkbox" id="quality-minor"> Minor</label>
-                            <label><input type="checkbox" id="quality-dim"> Diminished</label>
-                            <label><input type="checkbox" id="quality-aug"> Augmented</label>
+                        <div class="setting-group">
+                            <label>Direction</label>
+                            <select id="scale-direction">
+                                <option value="ascending">Ascending</option>
+                                <option value="descending">Descending</option>
+                                <option value="both">Both (Up & Down)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chord Settings -->
+                <div id="chord-settings" class="mode-settings hidden">
+                    <div class="settings-row">
+                        <div class="setting-group">
+                            <label>Root Selection</label>
+                            <select id="root-selection">
+                                <option value="chromatic">Chromatic</option>
+                                <option value="circleOfFifths">Circle of Fifths</option>
+                                <option value="random">Random</option>
+                                <option value="diatonic">Diatonic</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label>Key</label>
+                            <select id="target-key">
+                                <option value="C">C Major</option>
+                                <option value="G">G Major</option>
+                                <option value="D">D Major</option>
+                                <option value="A">A Major</option>
+                                <option value="E">E Major</option>
+                                <option value="B">B Major</option>
+                                <option value="F#">F# Major</option>
+                                <option value="F">F Major</option>
+                                <option value="Bb">Bb Major</option>
+                                <option value="Eb">Eb Major</option>
+                                <option value="Ab">Ab Major</option>
+                                <option value="Db">Db Major</option>
+                                <option value="Am">A Minor</option>
+                                <option value="Em">E Minor</option>
+                                <option value="Bm">B Minor</option>
+                                <option value="Dm">D Minor</option>
+                                <option value="Gm">G Minor</option>
+                                <option value="Cm">C Minor</option>
+                                <option value="Fm">F Minor</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label>Voicing</label>
+                            <select id="voicing-mode">
+                                <option value="rootPosition">Root Position</option>
+                                <option value="firstInversion">1st Inversion</option>
+                                <option value="secondInversion">2nd Inversion</option>
+                                <option value="thirdInversion">3rd Inversion</option>
+                                <option value="randomInversion">Random</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="setting-group setting-group-wide">
-                        <label>7th Chords</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="quality-maj7"> maj7</label>
-                            <label><input type="checkbox" id="quality-dom7"> 7 (Dominant)</label>
-                            <label><input type="checkbox" id="quality-m7"> m7</label>
-                            <label><input type="checkbox" id="quality-m7b5"> m7b5 (Half-Dim)</label>
+                    <div class="settings-row">
+                        <div class="setting-group setting-group-wide">
+                            <label>Triads</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" id="quality-major" checked> Major</label>
+                                <label><input type="checkbox" id="quality-minor"> Minor</label>
+                                <label><input type="checkbox" id="quality-dim"> Dim</label>
+                                <label><input type="checkbox" id="quality-aug"> Aug</label>
+                            </div>
+                        </div>
+
+                        <div class="setting-group setting-group-wide">
+                            <label>7th Chords</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" id="quality-maj7"> maj7</label>
+                                <label><input type="checkbox" id="quality-dom7"> 7</label>
+                                <label><input type="checkbox" id="quality-m7"> m7</label>
+                                <label><input type="checkbox" id="quality-m7b5"> m7b5</label>
+                                <label><input type="checkbox" id="quality-add9"> add9</label>
+                            </div>
                         </div>
                     </div>
+                </div>
 
+                <!-- Metronome Settings (shared) -->
+                <div class="metronome-settings">
                     <div class="setting-group">
-                        <label>Extensions</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="quality-add9"> add9</label>
-                        </div>
+                        <label><input type="checkbox" id="use-metronome"> Use Metronome</label>
                     </div>
-
-                    <div class="setting-group">
-                        <label>Voicing / Inversion</label>
-                        <select id="voicing-mode">
-                            <option value="rootPosition">Root Position</option>
-                            <option value="firstInversion">1st Inversion (3rd in bass)</option>
-                            <option value="secondInversion">2nd Inversion (5th in bass)</option>
-                            <option value="thirdInversion">3rd Inversion (7th in bass)</option>
-                            <option value="randomInversion">Random Inversion</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-group">
-                        <label>Voice Leading</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="smooth-transitions"> Smooth Transitions</label>
-                        </div>
-                    </div>
-
                     <div class="setting-group">
                         <label>BPM</label>
-                        <input type="number" id="practice-bpm" value="60" min="20" max="200">
+                        <input type="number" id="practice-bpm" value="80" min="40" max="200">
                     </div>
-
                     <div class="setting-group">
-                        <label>Bars per Chord</label>
-                        <input type="number" id="bars-per-chord" value="2" min="1" max="8">
-                    </div>
-                </div>
-
-                <div class="practice-actions">
-                    <button id="practice-start" class="practice-btn start">Start Practice</button>
-                    <button id="practice-stop" class="practice-btn stop hidden">Stop Practice</button>
-                </div>
-            </div>
-
-            <div id="practice-display" class="practice-display hidden">
-                <div class="target-chord">
-                    <span class="label">Play this chord:</span>
-                    <div id="target-chord-name" class="target-chord-name">-</div>
-                    <div id="target-chord-notes" class="target-chord-notes"></div>
-                </div>
-                <div class="hint-keyboard-container">
-                    <div id="hint-keyboard" class="hint-keyboard"></div>
-                </div>
-                <div class="practice-feedback">
-                    <div id="practice-result" class="practice-result"></div>
-                    <div id="practice-timer" class="practice-timer"></div>
-                </div>
-                <div class="practice-stats">
-                    <span>Correct: <strong id="stat-correct">0</strong></span>
-                    <span>Missed: <strong id="stat-missed">0</strong></span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Rhythm & Scale Training Section -->
-        <section class="rhythm-section">
-            <h2>Rhythm & Scale Training</h2>
-            <div class="rhythm-controls">
-                <div class="rhythm-settings">
-                    <div class="setting-group">
-                        <label>Mode</label>
-                        <select id="rhythm-mode">
-                            <option value="freeplay">Free Play (any key)</option>
-                            <option value="scales">Scale Practice</option>
-                            <option value="chords">With Chords</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-group">
-                        <label>BPM</label>
-                        <input type="number" id="rhythm-bpm" value="80" min="40" max="200">
-                    </div>
-
-                    <div class="setting-group">
-                        <label>Time Signature</label>
-                        <select id="rhythm-time-sig">
+                        <label>Time</label>
+                        <select id="time-signature">
                             <option value="4">4/4</option>
                             <option value="3">3/4</option>
                             <option value="2">2/4</option>
                         </select>
                     </div>
-
                     <div class="setting-group">
-                        <label>Options</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="rhythm-count-in" checked> Count In</label>
-                        </div>
+                        <label><input type="checkbox" id="count-in" checked> Count In</label>
                     </div>
                 </div>
 
-                <!-- Scale Settings (shown when mode = scales) -->
-                <div id="scale-settings" class="scale-settings hidden">
-                    <div class="setting-group">
-                        <label>Root Note</label>
-                        <select id="scale-root">
-                            <option value="C">C</option>
-                            <option value="C#">C# / Db</option>
-                            <option value="D">D</option>
-                            <option value="D#">D# / Eb</option>
-                            <option value="E">E</option>
-                            <option value="F">F</option>
-                            <option value="F#">F# / Gb</option>
-                            <option value="G">G</option>
-                            <option value="G#">G# / Ab</option>
-                            <option value="A" selected>A</option>
-                            <option value="A#">A# / Bb</option>
-                            <option value="B">B</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-group">
-                        <label>Scale Type</label>
-                        <select id="scale-type">
-                            <option value="major">Major</option>
-                            <option value="naturalMinor" selected>Natural Minor</option>
-                            <option value="harmonicMinor">Harmonic Minor</option>
-                            <option value="melodicMinor">Melodic Minor</option>
-                            <option value="pentatonicMajor">Pentatonic Major</option>
-                            <option value="pentatonicMinor">Pentatonic Minor</option>
-                            <option value="blues">Blues</option>
-                            <option value="dorian">Dorian</option>
-                            <option value="mixolydian">Mixolydian</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-group">
-                        <label>Direction</label>
-                        <select id="scale-direction">
-                            <option value="ascending">Ascending</option>
-                            <option value="descending">Descending</option>
-                            <option value="both">Both (Up & Down)</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-group">
-                        <label>Options</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="scale-hints" checked> Show Hints</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="rhythm-actions">
-                    <button id="rhythm-start" class="rhythm-btn start">Start Metronome</button>
-                    <button id="rhythm-stop" class="rhythm-btn stop hidden">Stop</button>
+                <div class="practice-actions">
+                    <button id="practice-start" class="practice-btn start">Start Practice</button>
+                    <button id="practice-stop" class="practice-btn stop hidden">Stop</button>
                 </div>
             </div>
 
-            <div id="rhythm-display" class="rhythm-display hidden">
-                <!-- Scale Info (shown in scale mode) -->
+            <!-- Practice Display -->
+            <div id="practice-display" class="practice-display hidden">
+                <!-- Scale Display -->
                 <div id="scale-display" class="scale-display hidden">
                     <div class="scale-info">
                         <span id="scale-name" class="scale-name">A Natural Minor</span>
                         <span id="scale-notes-display" class="scale-notes-display">A - B - C - D - E - F - G</span>
                     </div>
                     <div class="scale-progress">
-                        <div class="next-note-label">Next Note:</div>
+                        <div class="next-note-label">Next:</div>
                         <div id="next-note" class="next-note">A</div>
                         <div id="scale-progress-bar" class="scale-progress-bar">
                             <div id="scale-progress-fill" class="scale-progress-fill"></div>
                         </div>
                     </div>
-                    <div id="scale-hint-keyboard" class="hint-keyboard"></div>
                 </div>
 
-                <div class="beat-indicator">
+                <!-- Chord Display -->
+                <div id="chord-practice-display" class="chord-practice-display hidden">
+                    <div class="target-chord">
+                        <span class="label">Play:</span>
+                        <div id="target-chord-name" class="target-chord-name">-</div>
+                        <div id="target-chord-notes" class="target-chord-notes"></div>
+                    </div>
+                </div>
+
+                <!-- Hint Keyboard -->
+                <div class="hint-keyboard-container">
+                    <div id="hint-keyboard" class="hint-keyboard"></div>
+                </div>
+
+                <!-- Beat Indicator (when metronome active) -->
+                <div id="beat-indicator" class="beat-indicator hidden">
                     <div id="beat-dots" class="beat-dots"></div>
                 </div>
-                <div class="rhythm-feedback">
+
+                <!-- Timing Meter -->
+                <div id="timing-display" class="timing-display hidden">
                     <div class="timing-meter">
                         <span class="timing-label left">Early</span>
                         <div class="timing-track">
@@ -292,13 +252,20 @@
                         </div>
                         <span class="timing-label right">Late</span>
                     </div>
-                    <div id="rhythm-timing" class="rhythm-timing"></div>
                 </div>
-                <div id="scale-feedback" class="scale-feedback hidden"></div>
-                <div class="rhythm-stats">
-                    <span>Perfect: <strong id="rhythm-perfect">0</strong></span>
-                    <span>Good: <strong id="rhythm-good">0</strong></span>
-                    <span>Missed: <strong id="rhythm-missed">0</strong></span>
+
+                <!-- Feedback -->
+                <div id="practice-feedback" class="practice-feedback">
+                    <div id="feedback-text" class="feedback-text"></div>
+                </div>
+
+                <!-- Timer (for chord mode) -->
+                <div id="practice-timer" class="practice-timer hidden"></div>
+
+                <!-- Stats -->
+                <div class="practice-stats">
+                    <span>Correct: <strong id="stat-correct">0</strong></span>
+                    <span>Missed: <strong id="stat-missed">0</strong></span>
                 </div>
             </div>
         </section>
