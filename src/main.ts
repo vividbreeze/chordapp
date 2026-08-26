@@ -4,7 +4,7 @@ import { MidiHandler, midiNoteToName } from './midi.js';
 import { chordRecognizer } from './chords.js';
 import { practiceEngine, ChordChallenge, ChordQuality, RootSelection, VoicingMode } from './practice.js';
 import { rhythmEngine } from './rhythm.js';
-import { scaleTrainer, ScaleType, SCALE_NAMES, isNoteInScale, getScaleNoteNames } from './scales.js';
+import { ScaleType, SCALE_NAMES, isNoteInScale, getScaleNoteNames } from './scales.js';
 
 type PracticeMode = 'scales' | 'chords';
 
