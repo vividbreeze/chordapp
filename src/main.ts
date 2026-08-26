@@ -1,10 +1,10 @@
 // Main module - Connects MIDI, chord recognition, and UI
 
 import { MidiHandler, midiNoteToName } from './midi.js';
-import { chordRecognizer, ChordResult } from './chords.js';
+import { chordRecognizer } from './chords.js';
 import { practiceEngine, ChordChallenge, ChordQuality, RootSelection, VoicingMode } from './practice.js';
 import { rhythmEngine } from './rhythm.js';
-import { scaleTrainer, ScaleType, SCALE_NAMES } from './scales.js';
+import { scaleTrainer, ScaleType, SCALE_NAMES, isNoteInScale, getScaleNoteNames } from './scales.js';
 
 type PracticeMode = 'scales' | 'chords';
 
@@ -30,7 +30,6 @@ class ChordApp {
     private chordSettings!: HTMLElement;
     private scaleRoot!: HTMLSelectElement;
     private scaleType!: HTMLSelectElement;
-    private scaleDirection!: HTMLSelectElement;
     private rootSelection!: HTMLSelectElement;
     private targetKey!: HTMLSelectElement;
     private voicingMode!: HTMLSelectElement;
@@ -54,8 +53,6 @@ class ChordApp {
     private chordPracticeDisplay!: HTMLElement;
     private scaleName!: HTMLElement;
     private scaleNotesDisplay!: HTMLElement;
-    private nextNote!: HTMLElement;
-    private scaleProgressFill!: HTMLElement;
     private targetChordName!: HTMLElement;
     private targetChordNotes!: HTMLElement;
     private hintKeyboard!: HTMLElement;
@@ -100,7 +97,6 @@ class ChordApp {
         // Scale settings
         this.scaleRoot = document.getElementById('scale-root') as HTMLSelectElement;
         this.scaleType = document.getElementById('scale-type') as HTMLSelectElement;
-        this.scaleDirection = document.getElementById('scale-direction') as HTMLSelectElement;
 
         // Chord settings
         this.rootSelection = document.getElementById('root-selection') as HTMLSelectElement;
@@ -132,8 +128,6 @@ class ChordApp {
         this.chordPracticeDisplay = document.getElementById('chord-practice-display')!;
         this.scaleName = document.getElementById('scale-name')!;
         this.scaleNotesDisplay = document.getElementById('scale-notes-display')!;
-        this.nextNote = document.getElementById('next-note')!;
-        this.scaleProgressFill = document.getElementById('scale-progress-fill')!;
         this.targetChordName = document.getElementById('target-chord-name')!;
         this.targetChordNotes = document.getElementById('target-chord-notes')!;
         this.hintKeyboard = document.getElementById('hint-keyboard')!;
@@ -162,7 +156,10 @@ class ChordApp {
 
         // Mode tabs
         this.modeTabs.forEach(tab => {
-            tab.addEventListener('click', () => this.switchMode(tab.dataset.mode as PracticeMode));
+            tab.addEventListener('click', () => {
+                const mode = tab.dataset.mode as PracticeMode;
+                if (mode) this.switchMode(mode);
+            });
         });
 
         // Practice controls
@@ -277,7 +274,7 @@ class ChordApp {
 
         // Start metronome if enabled
         if (this.useMetronome.checked) {
-            this.startMetronome();
+            await this.startMetronome();
         }
     }
 
@@ -285,7 +282,6 @@ class ChordApp {
         this.isPracticing = false;
 
         // Stop engines
-        scaleTrainer.stop();
         practiceEngine.stop();
         rhythmEngine.stop();
 
@@ -296,32 +292,28 @@ class ChordApp {
 
         // Hide displays
         this.practiceDisplay.classList.add('hidden');
+        this.scaleDisplay.classList.add('hidden');
+        this.chordPracticeDisplay.classList.add('hidden');
+        this.beatIndicator.classList.add('hidden');
+        this.timingDisplay.classList.add('hidden');
         this.practiceStartBtn.classList.remove('hidden');
         this.practiceStopBtn.classList.add('hidden');
     }
 
     private startScalePractice(): void {
-        // Update scale settings
-        scaleTrainer.updateSettings({
-            root: this.scaleRoot.value,
-            scaleType: this.scaleType.value as ScaleType,
-            direction: this.scaleDirection.value as 'ascending' | 'descending' | 'both'
-        });
-
-        scaleTrainer.start(3);
+        const root = this.scaleRoot.value;
+        const type = this.scaleType.value as ScaleType;
 
         // Show scale display
         this.scaleDisplay.classList.remove('hidden');
         this.chordPracticeDisplay.classList.add('hidden');
 
         // Update info
-        const settings = scaleTrainer.getSettings();
-        this.scaleName.textContent = `${settings.root} ${SCALE_NAMES[settings.scaleType]}`;
-        this.scaleNotesDisplay.textContent = scaleTrainer.getScaleNotes().join(' - ');
+        this.scaleName.textContent = `${root} ${SCALE_NAMES[type]}`;
+        this.scaleNotesDisplay.textContent = getScaleNoteNames(root, type).join(' - ');
 
-        // Create hint keyboard
-        this.createScaleHintKeyboard();
-        this.updateScaleDisplay();
+        // Create hint keyboard showing scale notes
+        this.createScaleHintKeyboard(root, type);
     }
 
     private startChordPractice(): void {
@@ -416,26 +408,18 @@ class ChordApp {
     }
 
     private checkScaleNote(midiNote: number): void {
-        const result = scaleTrainer.checkNote(midiNote);
+        const root = this.scaleRoot.value;
+        const type = this.scaleType.value as ScaleType;
 
-        if (result === 'correct') {
+        if (isNoteInScale(midiNote, root, type)) {
             this.practiceStats.correct++;
-            this.showFeedback('Correct!', 'correct');
-        } else if (result === 'wrong' || result === 'outOfScale') {
+            this.showFeedback('In scale', 'correct');
+        } else {
             this.practiceStats.missed++;
             this.showFeedback('Wrong!', 'wrong');
         }
 
         this.updateStatsDisplay();
-        this.updateScaleDisplay();
-
-        if (scaleTrainer.isComplete()) {
-            this.showFeedback('Scale complete!', 'correct');
-            setTimeout(() => {
-                scaleTrainer.start(3);
-                this.updateScaleDisplay();
-            }, 1000);
-        }
     }
 
     private checkChordAnswer(): void {
@@ -476,20 +460,7 @@ class ChordApp {
         this.statMissed.textContent = this.practiceStats.missed.toString();
     }
 
-    private updateScaleDisplay(): void {
-        const expectedNote = scaleTrainer.getCurrentExpectedNote();
-        if (expectedNote !== null) {
-            this.nextNote.textContent = midiNoteToName(expectedNote).replace(/\d+/, '');
-        } else {
-            this.nextNote.textContent = '-';
-        }
-
-        const progress = scaleTrainer.getProgress();
-        const percentage = progress.total > 0 ? (progress.current / progress.total) * 100 : 0;
-        this.scaleProgressFill.style.width = `${percentage}%`;
-    }
-
-    private createScaleHintKeyboard(): void {
+    private createScaleHintKeyboard(root: string, type: ScaleType): void {
         this.hintKeyboard.innerHTML = '';
 
         const startNote = 48;
@@ -506,21 +477,20 @@ class ChordApp {
         keyboardInner.className = 'hint-keyboard-inner';
         keyboardInner.style.width = `${whiteKeyCount * whiteKeyWidth}px`;
 
-        const scalePitchClasses = scaleTrainer.getScalePitchClasses();
         let whiteKeyIndex = 0;
 
         for (let note = startNote; note <= endNote; note++) {
             const isBlack = this.isBlackKey(note);
-            const isInScale = scalePitchClasses.has(note % 12);
+            const inScale = isNoteInScale(note, root, type);
 
             if (isBlack) {
                 const key = document.createElement('div');
-                key.className = 'hint-black-key' + (isInScale ? ' highlight' : '');
+                key.className = 'hint-black-key' + (inScale ? ' highlight' : '');
                 key.style.left = `${whiteKeyIndex * whiteKeyWidth - blackKeyWidth / 2}px`;
                 keyboardInner.appendChild(key);
             } else {
                 const key = document.createElement('div');
-                key.className = 'hint-white-key' + (isInScale ? ' highlight' : '');
+                key.className = 'hint-white-key' + (inScale ? ' highlight' : '');
                 key.style.position = 'absolute';
                 key.style.left = `${whiteKeyIndex * whiteKeyWidth}px`;
                 key.style.width = `${whiteKeyWidth}px`;
